@@ -1,6 +1,7 @@
 from langchain_ollama import ChatOllama
-from langchain_ollama import OllamaEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
+
 
 llm = ChatOllama(model="gemma3:4b")
 
-embeddings = OllamaEmbeddings(model="nomic-embed-text")
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")

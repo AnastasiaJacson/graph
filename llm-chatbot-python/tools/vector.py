@@ -12,20 +12,15 @@ from langchain.chains import create_retrieval_chain
 neo4jvector = Neo4jVector.from_existing_index(
     embeddings,                              # (1)
     graph=graph,                             # (2)
-    index_name="moviePlots",                 # (3)
-    node_label="Movie",                      # (4)
-    text_node_property="plot",               # (5)
-    embedding_node_property="plotEmbedding", # (6)
+    index_name="tweeetTexts",                 # (3)
+    node_label="Tweet",                      # (4)
+    text_node_property="text",               # (5)
+    embedding_node_property="textEmbedding", # (6)
     retrieval_query="""
 RETURN
-    node.plot AS text,
+    node.text AS text,
     score,
     {
-        title: node.title,
-        directors: [ (person)-[:DIRECTED]->(node) | person.name ],
-        actors: [ (person)-[r:ACTED_IN]->(node) | [person.name, r.role] ],
-        tmdbId: node.tmdbId,
-        source: 'https://www.themoviedb.org/movie/'+ node.tmdbId
     } AS metadata
 """
 )
@@ -49,11 +44,11 @@ prompt = ChatPromptTemplate.from_messages(
 
 # Create the chain 
 question_answer_chain = create_stuff_documents_chain(llm, prompt)
-plot_retriever = create_retrieval_chain(
+text_retriever = create_retrieval_chain(
     retriever, 
     question_answer_chain
 )
 
 # Create a function to call the chain
-def get_movie_plot(input):
-    return plot_retriever.invoke({"input": input})
+def get_tweet_text(input):
+    return text_retriever.invoke({"input": input})
