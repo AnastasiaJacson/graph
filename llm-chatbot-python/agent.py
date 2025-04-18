@@ -9,6 +9,7 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from utils import get_session_id
 from langchain import hub
 from tools.vector import get_tweet_text
+from tools.cypher import cypher_qa
 
 
 def get_memory(session_id):
@@ -33,6 +34,11 @@ tools = [
         name="Tweet text search",
         description="For when you need to find information about tweets based on their text",
         func=get_tweet_text
+    ),
+    Tool.from_function(
+        name="Tweet information",
+        description="Provide information about tweets questions using Cypher",
+        func=cypher_qa
     )
 ]
 

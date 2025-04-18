@@ -10,17 +10,19 @@ from langchain.chains import create_retrieval_chain
 # Create the Neo4jVector
 
 neo4jvector = Neo4jVector.from_existing_index(
-    embeddings,                              # (1)
-    graph=graph,                             # (2)
-    index_name="tweeetTexts",                 # (3)
-    node_label="Tweet",                      # (4)
-    text_node_property="text",               # (5)
-    embedding_node_property="textEmbedding", # (6)
+    embeddings,                       
+    graph=graph,                      
+    index_name="tweeetTexts",         
+    node_label="Tweet",               
+    text_node_property="text",        
+    embedding_node_property="textEmbedding",
     retrieval_query="""
 RETURN
     node.text AS text,
     score,
     {
+        author: [(u)-[r:POSTS]->(node) | u.name],
+        likes: node.favorites
     } AS metadata
 """
 )
